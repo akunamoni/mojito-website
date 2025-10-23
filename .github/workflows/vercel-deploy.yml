@@ -29,6 +29,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
+      - name: 🧹 Clean npm cache
+        run: npm cache clean --force
+
       - name: 📥 Install dependencies
         run: npm ci
 
