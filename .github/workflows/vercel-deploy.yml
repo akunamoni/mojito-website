@@ -1,47 +1,41 @@
-name: Deploy to Vercel
+name: Build and Deploy to Vercel
 
 on:
   push:
     branches:
-      - main  # Change if your main branch is 'master' or others
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repo
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js (Node 22)
-      - name: Setup Node.js
+      - name: Setup Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 18
 
-      # 3. Clean npm cache (prevents weird dependency issues)
       - name: Clean npm cache
         run: npm cache clean --force
 
-      # 4. Install dependencies
       - name: Install dependencies
         run: npm ci
 
-      # 5. Build Vite project
       - name: Build project
         run: npm run build
 
-      # 6. Install Vercel CLI
       - name: Install Vercel CLI
         run: npm install -g vercel
 
-      # 7. Deploy to Vercel
+      - name: Disable Vercel CLI telemetry
+        run: vercel telemetry disable
+
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-        run: |
-          vercel --prod --yes
-
+        run: vercel --prod --yes
