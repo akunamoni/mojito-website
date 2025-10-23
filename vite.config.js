@@ -8,7 +8,6 @@ if (!crypto.hash) {
     crypto.createHash(alg).update(data).digest("hex");
 }
 
-
 // ✅ Use export default instead of module.exports
 export default defineConfig({
   plugins: [tailwindcss()],
